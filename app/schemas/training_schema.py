@@ -8,6 +8,11 @@ class TrainingBase(BaseModel):
 class TrainingCreate(TrainingBase):
     instructor_id: int
 
+class TrainingUpdate(BaseModel):
+    name: Optional[str] = None
+    training_type: Optional[str] = None
+    instructor_id: Optional[int] = None
+
 class TrainingOut(TrainingBase):
     training_id: int
     instructor_id: int

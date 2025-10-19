@@ -11,6 +11,13 @@ class TrainingRepository:
     def get_all(self):
         return self.db.query(models.Training).all()
 
+    def get_by_name(self, name: str):
+        # case-insensitive partial match
+        return self.db.query(models.Training).filter(models.Training.name.ilike(f"%{name}%")).all()
+
+    def get_by_type(self, training_type: str):
+        return self.db.query(models.Training).filter(models.Training.training_type.ilike(f"%{training_type}%")).all()
+
     def create(self, training: schemas.TrainingCreate):
         db_training = models.Training(
             name=training.name,
@@ -22,9 +29,10 @@ class TrainingRepository:
         self.db.refresh(db_training)
         return db_training
 
-    def update(self, db_training: models.Training, training_update: schemas.TrainingBase):
-        db_training.name = training_update.name
-        db_training.training_type = training_update.training_type
+    def update(self, db_training: models.Training, training_update: schemas.TrainingUpdate):
+        # partial update – samo polja koja nisu None
+        for field, value in training_update.dict(exclude_unset=True).items():
+            setattr(db_training, field, value)
         self.db.commit()
         self.db.refresh(db_training)
         return db_training

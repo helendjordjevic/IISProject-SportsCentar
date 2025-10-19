@@ -3,7 +3,7 @@ pip freeze > requirements.txt
 
 sqlalchemy → ORM za rad sa PostgreSQL
 psycopg2-binary → PostgreSQL driver
-passlib[bcrypt] → hash lozinki
+passlib[argon2] → hash lozinki
 python-jose → JWT za autentifikaciju
 fastapi i uvicorn → API framework + server
 
