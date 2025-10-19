@@ -1,0 +1,10 @@
+venv\Scripts\activate
+pip freeze > requirements.txt
+
+sqlalchemy → ORM za rad sa PostgreSQL
+psycopg2-binary → PostgreSQL driver
+passlib[bcrypt] → hash lozinki
+python-jose → JWT za autentifikaciju
+fastapi i uvicorn → API framework + server
+
+uvicorn main:app --reload --port 6000
