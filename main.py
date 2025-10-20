@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import user_router, training_studio_router, training_router
+from app.routers import user_router, training_studio_router, training_router, sports_center_router, session_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +24,10 @@ app.add_middleware(
 app.include_router(user_router.router)
 app.include_router(training_studio_router.router)
 app.include_router(training_router.router)
+app.include_router(sports_center_router.router)
+app.include_router(session_router.router)
+
+
 
 #app.include_router(sports_center.router, prefix="/sports_centers", tags=["Sports Centers"])
 #app.include_router(trainings.router, prefix="/trainings", tags=["Trainings"])

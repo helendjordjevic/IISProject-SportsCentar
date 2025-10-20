@@ -19,6 +19,10 @@ class SportsCenterRepository:
     def get_all(self):
         return self.db.query(models.SportsCenter).all()
 
+    def get_by_name(self, name: str):
+        # case-insensitive partial match
+        return self.db.query(models.SportsCenter).filter(models.SportsCenter.name.ilike(f"%{name}%")).all()
+
     def delete(self, sc: models.SportsCenter):
         self.db.delete(sc)
         self.db.commit()

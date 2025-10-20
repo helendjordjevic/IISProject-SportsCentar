@@ -23,11 +23,9 @@ class SessionRepository:
         self.db.refresh(db_session)
         return db_session
 
-    def update(self, db_session: models.Session, session_update: schemas.SessionBase):
-        db_session.start_time = session_update.start_time
-        db_session.end_time = session_update.end_time
-        db_session.training_id = session_update.training_id
-        db_session.training_studio_id = session_update.training_studio_id
+    def update(self, db_session: models.Session, session_update: schemas.SessionUpdate):
+        for field, value in session_update.dict(exclude_unset=True).items():
+            setattr(db_session, field, value)
         self.db.commit()
         self.db.refresh(db_session)
         return db_session

@@ -4,4 +4,4 @@ from .reservation_schema import ReservationBase, ReservationCreate, ReservationO
 from .training_schema import TrainingBase, TrainingCreate, TrainingOut , TrainingUpdate
 from .training_studio_schema import TrainingStudioBase, TrainingStudioCreate, TrainingStudioOut
 from .attendance_schema import AttendanceBase, AttendanceCreate, AttendanceOut
-from .session_schema import SessionBase, SessionCreate, SessionOut
+from .session_schema import SessionBase, SessionCreate, SessionOut, SessionUpdate
