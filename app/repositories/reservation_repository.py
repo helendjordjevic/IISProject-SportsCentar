@@ -11,26 +11,24 @@ class ReservationRepository:
     def get_all(self):
         return self.db.query(models.Reservation).all()
 
+    def get_all_for_client(self, client_id: int):
+        return self.db.query(models.Reservation).filter(models.Reservation.client_id == client_id).all()
+
+    def count_active_for_session(self, session_id: int):
+        return self.db.query(models.Reservation).filter(
+            models.Reservation.session_id == session_id,
+            models.Reservation.status == models.ReservationStatusEnum.RESERVED
+        ).count()
+
     def create(self, reservation: schemas.ReservationCreate):
-        db_reservation = models.Reservation(
+        db_res = models.Reservation(
             client_id=reservation.client_id,
             session_id=reservation.session_id,
             reservation_date=reservation.reservation_date,
             status=reservation.status
         )
-        self.db.add(db_reservation)
+        self.db.add(db_res)
         self.db.commit()
-        self.db.refresh(db_reservation)
-        return db_reservation
+        self.db.refresh(db_res)
+        return db_res
 
-    def update(self, db_reservation: models.Reservation, reservation_update: schemas.ReservationBase):
-        db_reservation.status = reservation_update.status
-        db_reservation.reservation_date = reservation_update.reservation_date
-        self.db.commit()
-        self.db.refresh(db_reservation)
-        return db_reservation
-
-    def delete(self, db_reservation: models.Reservation):
-        self.db.delete(db_reservation)
-        self.db.commit()
-        return True

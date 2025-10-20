@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import user_router, training_studio_router, training_router, sports_center_router, session_router
+from app.routers import user_router, training_studio_router, training_router, sports_center_router, session_router, reservation_router, attendance_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -26,15 +26,10 @@ app.include_router(training_studio_router.router)
 app.include_router(training_router.router)
 app.include_router(sports_center_router.router)
 app.include_router(session_router.router)
+app.include_router(reservation_router.router)
+app.include_router(attendance_router.router)
 
 
-
-#app.include_router(sports_center.router, prefix="/sports_centers", tags=["Sports Centers"])
-#app.include_router(trainings.router, prefix="/trainings", tags=["Trainings"])
-#app.include_router(training_studios.router, prefix="/training_studios", tags=["Training Studios"])
-#app.include_router(sessions.router, prefix="/sessions", tags=["Sessions"])
-#app.include_router(reservations.router, prefix="/reservations", tags=["Reservations"])
-#app.include_router(attendances.router, prefix="/attendances", tags=["Attendances"])
 
 @app.get("/")
 def root():

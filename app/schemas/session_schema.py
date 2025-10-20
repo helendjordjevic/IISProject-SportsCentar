@@ -16,7 +16,7 @@ class SessionUpdate(BaseModel):
     end_time: Optional[datetime] = None
     training_id: Optional[int] = None
     training_studio_id: Optional[int] = None
-    
+
 class SessionOut(SessionBase):
     session_id: int
 
