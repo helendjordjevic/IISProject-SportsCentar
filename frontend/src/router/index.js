@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import AddSessionView from '@/views/AddSessionView.vue';
+import WeeklyReportView from '@/views/WeeklyReportView.vue';
 
 
 import { store } from '@/main'; 
@@ -40,6 +41,11 @@ const routes = [
     path: '/trainings/:trainingId/add-session',
     name: 'addSession',
     component: AddSessionView
+  },
+  {
+    path: '/weekly-report',
+    name: 'weeklyReport',
+    component: WeeklyReportView
   },
   
 ];

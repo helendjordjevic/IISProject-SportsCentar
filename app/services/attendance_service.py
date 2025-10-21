@@ -3,6 +3,9 @@ from fastapi import HTTPException
 from app import models, schemas
 from app.repositories.attendance_repository import AttendanceRepository
 from typing import Optional
+from collections import defaultdict
+from datetime import datetime, timedelta
+from sqlalchemy.orm import joinedload
 
 class AttendanceService:
     def __init__(self, db: Session):
@@ -96,3 +99,54 @@ class AttendanceService:
                 "training_rating": a.training_rating
             })
         return result
+
+    def get_weekly_report(self, week_start_date: datetime):
+        week_start = week_start_date
+        week_end = week_start + timedelta(days=7)
+
+        # Dohvati sve prisustva u toj sedmici sa sesijama i povezanim podacima
+        attendances = (
+            self.db.query(models.Attendance)
+            .join(models.Attendance.session)
+            .options(
+                joinedload(models.Attendance.session).joinedload(models.Session.training).joinedload(models.Training.instructor),
+                joinedload(models.Attendance.session).joinedload(models.Session.training_studio)
+            )
+            .filter(
+                models.Attendance.attendance_status == models.AttendanceStatusEnum.ATTENDED,
+                models.Session.start_time >= week_start,
+                models.Session.start_time <= week_end
+                )
+            .all()
+        )
+
+        # Grupiraj po sesiji u Pythonu
+        sessions_dict = defaultdict(list)
+        for attendance in attendances:
+            sessions_dict[attendance.session].append(attendance)
+
+        report = []
+        for session, session_attendances in sessions_dict.items():
+            attended_count = len(session_attendances)
+            average_rating = (
+                sum(a.training_rating for a in session_attendances if a.training_rating is not None)
+                / attended_count
+                if attended_count > 0 else None
+            )
+
+            report.append(schemas.WeeklySessionReportItem(
+                session_id=session.session_id,
+                training_name=session.training.name,
+                training_type=session.training.training_type,
+                instructor_name=f"{session.training.instructor.first_name} {session.training.instructor.last_name}",
+                training_studio_number=session.training_studio.training_studio_number,
+                session_start_time=session.start_time,
+                session_end_time=session.end_time,
+                attended_count=attended_count,
+                average_rating=round(average_rating, 2) if average_rating else None
+            ))
+
+        # Sortiraj po start_time
+        report.sort(key=lambda x: x.session_start_time)
+
+        return report

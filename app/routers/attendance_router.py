@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.attendance_service import AttendanceService
 from app.schemas import AttendanceCreate, AttendanceUpdate, AttendanceOut
+from app.schemas import WeeklySessionReportItem
 from app.models import AttendanceStatusEnum
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
+
 
 router = APIRouter(prefix="/attendances", tags=["Attendances"])
 
@@ -36,3 +39,12 @@ def get_all_for_client(
 def get_attendance_by_id(attendance_id: int, db: Session = Depends(get_db)):
     service = AttendanceService(db)
     return service.get_attendance_by_id(attendance_id)
+
+@router.get("/reports/weekly", response_model=List[WeeklySessionReportItem])
+def get_weekly_report(
+    week_start_date: datetime = Query(..., description="Datum početka sedmice (YYYY-MM-DD)"),
+    db: Session = Depends(get_db)
+):
+    service = AttendanceService(db)
+    report = service.get_weekly_report(week_start_date)
+    return report

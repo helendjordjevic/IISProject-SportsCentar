@@ -33,6 +33,8 @@
 
         <template v-else>
           <router-link v-if="isClient" class="nav-btn" to="/profile">My Profile</router-link>
+          <router-link v-if="isAdmin" class="nav-btn" to="/weekly-report">Weekly Report</router-link>
+          <router-link v-if="isInstructor" class="nav-btn" to="/instructor-dashboard">Instructor Dashboard</router-link>
           <button class="nav-btn" @click="logout">Logout</button>
         </template>
       </div>
