@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 from app import models, schemas
 from app.repositories.attendance_repository import AttendanceRepository
@@ -69,4 +69,30 @@ class AttendanceService:
         return self.repo.get_all()
     
     def get_all_for_client(self, client_id: int, status: Optional[models.AttendanceStatusEnum] = None):
-        return self.repo.get_all_for_client(client_id, status)
+        attendances = (
+            self.db.query(models.Attendance)
+            .filter(models.Attendance.client_id == client_id)
+            .options(
+                joinedload(models.Attendance.session).joinedload(models.Session.training)
+            )
+            .all()
+        )
+
+        result = []
+        for a in attendances:
+            # filtriranje po statusu, ako je prosleđeno
+            if status and a.attendance_status != status:
+                continue
+
+            result.append({
+                "attendance_id": a.attendance_id,
+                "client_id": a.client_id,
+                "session_id": a.session.session_id,
+                "training_name": a.session.training.name if a.session.training else None,
+                "session_start_time": a.session.start_time,
+                "session_end_time": a.session.end_time,
+                "attendance_date": a.attendance_date,
+                "attendance_status": a.attendance_status.value,
+                "training_rating": a.training_rating
+            })
+        return result

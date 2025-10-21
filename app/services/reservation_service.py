@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app import models, schemas
 from app.repositories.reservation_repository import ReservationRepository
 
@@ -48,7 +48,19 @@ class ReservationService:
         db_res.status = models.ReservationStatusEnum.CANCELLED
         self.db.commit()
         self.db.refresh(db_res)
-        return db_res
+
+        # Formiraj response dict
+        return {
+            "reservation_id": db_res.reservation_id,
+            "client_id": db_res.client_id,
+            "session_id": db_res.session.session_id,
+            "training_name": db_res.session.training.name,
+            "session_start_time": db_res.session.start_time,
+            "session_end_time": db_res.session.end_time,
+            "reservation_date": db_res.reservation_date,
+            "status": db_res.status.value
+        }
+
     
     def get_reservation_by_id(self, reservation_id: int):
         db_res = self.repo.get_by_id(reservation_id)
@@ -56,8 +68,31 @@ class ReservationService:
             raise HTTPException(status_code=404, detail="Reservation not found")
         return db_res
 
+
     def get_reservations_for_client(self, client_id: int):
         client = self.db.query(models.User).filter(models.User.user_id == client_id).first()
         if not client:
             raise HTTPException(status_code=404, detail="Client not found")
-        return self.repo.get_all_for_client(client_id)
+
+        reservations = (
+            self.db.query(models.Reservation)
+            .filter(models.Reservation.client_id == client_id)
+            .options(
+                joinedload(models.Reservation.session).joinedload(models.Session.training)
+            )
+            .all()
+        )
+
+        result = []
+        for r in reservations:
+            result.append({
+                "reservation_id": r.reservation_id,
+                "client_id": r.client_id,
+                "session_id": r.session.session_id,
+                "training_name": r.session.training.name,
+                "session_start_time": r.session.start_time,
+                "session_end_time": r.session.end_time,
+                "reservation_date": r.reservation_date,
+                "status": r.status.value  # ako je Enum
+            })
+        return result

@@ -11,6 +11,9 @@ class SessionRepository:
     def get_all(self):
         return self.db.query(models.Session).all()
 
+    def get_by_training_id(self, training_id: int):
+        return self.db.query(models.Session).filter(models.Session.training_id == training_id).all()
+
     def create(self, session: schemas.SessionCreate):
         db_session = models.Session(
             start_time=session.start_time,

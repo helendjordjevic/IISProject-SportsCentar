@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 from app.models import ReservationStatusEnum
 
@@ -10,16 +10,21 @@ class ReservationBase(BaseModel):
     status: ReservationStatusEnum
 
 class ReservationCreate(ReservationBase):
-    client_id: int
-    session_id: int
-    reservation_date: date
     status: Optional[ReservationStatusEnum] = None 
 
 class ReservationUpdate(BaseModel):
     status: Optional[ReservationStatusEnum] = None
 
-class ReservationOut(ReservationBase):
+class ReservationOut(BaseModel):
     reservation_id: int
+    client_id: int
+    session_id: int
+    reservation_date: date
+    status: ReservationStatusEnum
+    training_name: str
+    session_start_time: datetime
+    session_end_time: datetime
+
 
     class Config:
         from_attributes = True

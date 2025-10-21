@@ -24,6 +24,12 @@ def get_session(session_id: int, db: Session = Depends(get_db)):
     service = SessionService(db)
     return service.get_session_by_id(session_id)
 
+@router.get("/training/{training_id}", response_model=list[SessionOut])
+def get_sessions_for_training(training_id: int, db: Session = Depends(get_db)):
+    service = SessionService(db)
+    sessions = service.get_sessions_by_training(training_id)
+    return sessions
+
 @router.put("/{session_id}", response_model=SessionOut)
 def update_session(session_id: int, session_update: SessionUpdate, db: Session = Depends(get_db)):
     service = SessionService(db)

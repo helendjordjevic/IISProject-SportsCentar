@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app.repositories.user_repository import UserRepository
 from app.schemas import UserCreate, UserUpdate, UserOut
 from app.utils.security import  verify_password
-from app.models import User
+from app.models import User, UserTypeEnum
 
 
 class UserService:
@@ -55,3 +55,8 @@ class UserService:
             return None
 
         return user
+    
+    def get_all_instructors(self):
+        users = self.repo.get_all()
+        instructors = [u for u in users if u.user_type == UserTypeEnum.INSTRUCTOR]
+        return instructors

@@ -56,6 +56,9 @@ class SessionService:
 
     def get_all_sessions(self):
         return self.repository.get_all()
+    
+    def get_sessions_by_training(self, training_id: int):
+        return self.repository.get_by_training_id(training_id)
 
     def update_session(self, session_id: int, session_update: schemas.SessionUpdate):
         db_session = self.repository.get_by_id(session_id)

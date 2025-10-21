@@ -67,6 +67,11 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     
     return {"message": "Korisnik je uspešno izbrisan"}
 
+@router.get("/all/instructors", response_model=List[UserOut])
+def get_all_instructors(db: Session = Depends(get_db)):
+    service = UserService(db)
+    instructors = service.get_all_instructors()
+    return instructors
 
 @router.post("/login", response_model=LoginResponse)
 def login_user(login_data: LoginRequest, db: Session = Depends(get_db)):

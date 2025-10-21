@@ -7,4 +7,10 @@ passlib[argon2] → hash lozinki
 python-jose → JWT za autentifikaciju
 fastapi i uvicorn → API framework + server
 
+Backend: in IISProject-SportsCentar, trenutno promenjen na 8000
 uvicorn main:app --reload --port 6000
+
+Frontend: in frontend 6001
+cd \Users\Helena\Desktop\FTN\4.Godina\IIS\IISProject-SportsCentar\frontend
+npm install
+npm run serve
