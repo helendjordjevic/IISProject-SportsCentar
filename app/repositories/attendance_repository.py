@@ -31,7 +31,6 @@ class AttendanceRepository:
         self.db.refresh(db_attendance)
         return db_attendance
 
-    # ✅ Ova metoda ti je falila
     def get_by_client_and_session(self, client_id: int, session_id: int):
         return self.db.query(models.Attendance).filter(
             models.Attendance.client_id == client_id,

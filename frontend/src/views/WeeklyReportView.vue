@@ -49,6 +49,13 @@
       </table>
 
       <p v-else>No sessions found for this week.</p>
+
+       <div v-if="reportData.length" class="mt-3">
+        <button class="btn btn-success" @click="downloadPDF">
+          Download PDF
+        </button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -87,6 +94,33 @@ export default {
       .finally(() => {
         this.loading = false;
       });
+    },
+    async downloadPDF() {
+      if (!this.selectedWeekStart) {
+        alert("Please select a week start date");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/attendances/reports/weekly/pdf",
+          {
+            params: { week_start_date: this.selectedWeekStart },
+            responseType: "blob", 
+          }
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `weekly_report_${this.selectedWeekStart}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (err) {
+        console.error("Error downloading PDF:", err);
+        alert("Failed to download PDF");
+      }
     },
     formatDateTime(dt) {
       const d = new Date(dt);
