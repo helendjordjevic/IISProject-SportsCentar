@@ -3,23 +3,12 @@
    <div class="container-fluid">
       <router-link class="brand" to="/">🏋️ Sports Center</router-link>
 
-      <div 
-        v-if="!isTrainingDetailsPage" 
-        class="search-section"
-      >
-        <input 
-          type="text" 
-          placeholder="Search trainings..." 
-          v-model="searchText"
-          @keyup.enter="searchTrainings"
-          class="search-input"
-        />
-
+      <div v-if="!isTrainingDetailsPage" class="search-section">
+        <input type="text" placeholder="Search trainings..." v-model="searchText" @keyup.enter="searchTrainings" class="search-input"/>
         <select v-model="searchFilter" class="filter-select">
           <option value="name">Name</option>
           <option value="type">Type</option>
         </select>
-
         <button type="button" class="search-btn" @click="searchTrainings">
           <font-awesome-icon icon="magnifying-glass" />
         </button>
@@ -31,10 +20,10 @@
           <router-link class="nav-btn" to="/register">Register</router-link>
         </template>
 
-        <template v-else>
-          <router-link v-if="isClient" class="nav-btn" to="/profile">My Profile</router-link>
+       <template v-else>
+          <router-link class="nav-btn" to="/profile">My Profile</router-link>
+          <router-link v-if="isClient" class="nav-btn" to="/suggestions">Suggestions</router-link>
           <router-link v-if="isAdmin" class="nav-btn" to="/weekly-report">Weekly Report</router-link>
-          <router-link v-if="isInstructor" class="nav-btn" to="/instructor-dashboard">Instructor Dashboard</router-link>
           <button class="nav-btn" @click="logout">Logout</button>
         </template>
       </div>
@@ -53,43 +42,41 @@ export default {
     return {
       searchText: '',
       searchFilter: 'name',
-      isLoggedIn: !!localStorage.getItem('userEmail') // reactive check
+      isLoggedIn: !!localStorage.getItem('userEmail'),
+      userType: (localStorage.getItem("userType") || "").trim().toUpperCase()
     };
   },
-  computed: 
-  {
-    isTrainingDetailsPage() {
-      return this.$route.name === 'trainingDetail';
-    }, isClient() {
-    return localStorage.getItem("userType") === "CLIENT";
-  },
-  isAdmin() {
-    return localStorage.getItem("userType") === "ADMIN";
-  },
-  isInstructor() {
-    return localStorage.getItem("userType") === "INSTRUCTOR";
-  }
+  computed: {
+    isClient() {
+      return this.userType === "CLIENT";
+    },
+    isAdmin() {
+      return this.userType === "ADMIN";
+    },
+    isInstructor() {
+      return this.userType === "INSTRUCTOR";
+    }
 },
   watch: {
-    // kad se ruta promeni, proveri da li je korisnik logovan
     '$route'() {
       this.isLoggedIn = !!localStorage.getItem('userEmail');
+      this.userType = (localStorage.getItem("userType") || "").trim().toUpperCase();
     }
   },
   methods: {
     logout() {
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userType");
-      this.isLoggedIn = false;
-      this.$router.push("/login");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userType");
+        this.isLoggedIn = false;
+        this.userType = ""; // reset
+        this.$router.push("/login");
     },
     searchTrainings() {
       console.log("Searching for:", this.searchText, "with filter:", this.searchFilter);
     }
   },
   created() {
-    // Axios interceptor za slanje tokena
     axios.interceptors.request.use(config => {
       const token = localStorage.getItem("token");
       if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -158,7 +145,6 @@ export default {
   margin-left: 8px;
 }
 
-/* Login / Register sekcija */
 .auth-section {
   display: flex;
   gap: 12px;

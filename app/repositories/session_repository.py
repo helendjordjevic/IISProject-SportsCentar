@@ -19,7 +19,10 @@ class SessionRepository:
             start_time=session.start_time,
             end_time=session.end_time,
             training_id=session.training_id,
-            training_studio_id=session.training_studio_id
+            training_studio_id=session.training_studio_id,
+            weekday=session.weekday,           
+            day_period=session.day_period
+            
         )
         self.db.add(db_session)
         self.db.commit()

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import user_router, training_studio_router, training_router, sports_center_router, session_router, reservation_router, attendance_router
+from app.routers import user_router, training_studio_router, training_router, sports_center_router, session_router, reservation_router, attendance_router, recommendation_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,6 +28,7 @@ app.include_router(sports_center_router.router)
 app.include_router(session_router.router)
 app.include_router(reservation_router.router)
 app.include_router(attendance_router.router)
+app.include_router(recommendation_router.router) 
 
 
 

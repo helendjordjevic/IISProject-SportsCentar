@@ -22,7 +22,9 @@ class TrainingRepository:
         db_training = models.Training(
             name=training.name,
             training_type=training.training_type,
-            instructor_id=training.instructor_id
+            instructor_id=training.instructor_id,
+            difficulty_level=training.difficulty_level  
+
         )
         self.db.add(db_training)
         self.db.commit()
@@ -30,7 +32,6 @@ class TrainingRepository:
         return db_training
 
     def update(self, db_training: models.Training, training_update: schemas.TrainingUpdate):
-        # partial update – samo polja koja nisu None
         for field, value in training_update.dict(exclude_unset=True).items():
             setattr(db_training, field, value)
         self.db.commit()

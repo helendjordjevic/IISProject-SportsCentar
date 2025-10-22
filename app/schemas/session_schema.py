@@ -7,6 +7,8 @@ class SessionBase(BaseModel):
     end_time: datetime
     training_id: int
     training_studio_id: Optional[int] = None
+    weekday: Optional[str] = None       
+    day_period: Optional[str] = None
 
 class SessionCreate(SessionBase):
     pass
@@ -16,6 +18,8 @@ class SessionUpdate(BaseModel):
     end_time: Optional[datetime] = None
     training_id: Optional[int] = None
     training_studio_id: Optional[int] = None
+    weekday: Optional[str] = None       
+    day_period: Optional[str] = None 
 
 class SessionOut(SessionBase):
     session_id: int

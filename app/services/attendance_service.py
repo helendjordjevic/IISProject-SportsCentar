@@ -52,11 +52,9 @@ class AttendanceService:
         if not db_att:
             raise HTTPException(status_code=404, detail="Attendance not found")
 
-        # Ne može se dodati ocena ako nije prisustvovao
         if attendance_update.training_rating is not None and db_att.attendance_status != models.AttendanceStatusEnum.ATTENDED:
             raise HTTPException(status_code=400, detail="Cannot rate a session you did not attend")
 
-        # Ne može se menjati ocena ako je već postavljena
         if db_att.training_rating is not None and attendance_update.training_rating is not None:
             raise HTTPException(status_code=400, detail="Rating already given, cannot update")
 
@@ -83,7 +81,6 @@ class AttendanceService:
 
         result = []
         for a in attendances:
-            # filtriranje po statusu, ako je prosleđeno
             if status and a.attendance_status != status:
                 continue
 
@@ -104,7 +101,6 @@ class AttendanceService:
         week_start = week_start_date
         week_end = week_start + timedelta(days=7)
 
-        # Dohvati sve prisustva u toj sedmici sa sesijama i povezanim podacima
         attendances = (
             self.db.query(models.Attendance)
             .join(models.Attendance.session)
@@ -120,7 +116,6 @@ class AttendanceService:
             .all()
         )
 
-        # Grupiraj po sesiji u Pythonu
         sessions_dict = defaultdict(list)
         for attendance in attendances:
             sessions_dict[attendance.session].append(attendance)

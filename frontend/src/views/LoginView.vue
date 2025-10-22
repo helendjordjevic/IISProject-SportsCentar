@@ -47,7 +47,6 @@ export default {
         const response = await axios.post("http://localhost:8000/users/login", this.loginDto);
         const user = response.data;
 
-        // Save user to localStorage
         localStorage.setItem("userEmail", user.email);
         localStorage.setItem("userId", user.user_id);
         localStorage.setItem("userType", user.user_type);

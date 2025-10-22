@@ -3,7 +3,6 @@
     <h2>Weekly Training Report</h2>
     <p>Select week start date to view report</p>
 
-    <!-- Date picker -->
     <div class="mb-3">
       <label for="weekStart" class="form-label">Week Start Date:</label>
       <input 
@@ -62,7 +61,7 @@ export default {
     return {
       reportData: [],
       loading: false,
-      selectedWeekStart: null, // admin bira datum
+      selectedWeekStart: null, 
     };
   },
   methods: {

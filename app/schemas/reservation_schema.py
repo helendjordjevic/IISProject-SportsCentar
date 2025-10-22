@@ -7,7 +7,7 @@ class ReservationBase(BaseModel):
     client_id: int
     session_id: int
     reservation_date: date
-    status: ReservationStatusEnum
+    status: ReservationStatusEnum = None
 
 class ReservationCreate(ReservationBase):
     status: Optional[ReservationStatusEnum] = None 
@@ -27,4 +27,4 @@ class ReservationOut(BaseModel):
 
 
     class Config:
-        from_attributes = True
+        from_orm = True

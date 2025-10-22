@@ -65,6 +65,8 @@ class Training(Base):
     name = Column(String(100), nullable=False)
     training_type = Column(String(50))
     instructor_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"))
+    difficulty_level = Column(String(20), nullable=True)  # 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'
+
 
     instructor = relationship("User", back_populates="trainings")
     sessions = relationship("Session", back_populates="training", cascade="all, delete")
@@ -78,6 +80,9 @@ class Session(Base):
     end_time = Column(TIMESTAMP, nullable=False)
     training_id = Column(Integer, ForeignKey("trainings.training_id", ondelete="CASCADE"))
     training_studio_id = Column(Integer, ForeignKey("training_studios.training_studio_id", ondelete="SET NULL"))
+    weekday = Column(String(20), nullable=True)  # 'Monday', 'Tuesday'...
+    day_period = Column(String(20), nullable=True)  # 'morning', 'afternoon', 'evening'
+
 
     training = relationship("Training", back_populates="sessions")
     training_studio = relationship("TrainingStudio", back_populates="sessions")

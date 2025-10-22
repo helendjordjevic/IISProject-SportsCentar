@@ -31,4 +31,3 @@ class ReservationRepository:
         self.db.commit()
         self.db.refresh(db_res)
         return db_res
-

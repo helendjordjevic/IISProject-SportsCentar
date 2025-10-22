@@ -39,4 +39,4 @@ def update_session(session_id: int, session_update: SessionUpdate, db: Session =
 def delete_session(session_id: int, db: Session = Depends(get_db)):
     service = SessionService(db)
     service.delete_session(session_id)
-    return {"detail": "Session successfully deleted"}
+    return {"detail": "Termin uspesno obrisan"}

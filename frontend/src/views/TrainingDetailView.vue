@@ -112,16 +112,16 @@ export default {
       });
 
     } catch (error) {
-  console.error("Reservation error:", error); // prikaz kompletnog error objekta
+  console.error("Reservation error:", error); 
   let message = "Došlo je do greške prilikom rezervacije.";
 
   if (error.response && error.response.data) {
     if (typeof error.response.data === 'string') {
-      message = error.response.data; // ako backend vraća string
+      message = error.response.data; 
     } else if (error.response.data.message) {
-      message = error.response.data.message; // ako backend vraća objekat sa message
+      message = error.response.data.message; 
     } else {
-      message = JSON.stringify(error.response.data); // fallback
+      message = JSON.stringify(error.response.data); 
     }
   }
       await Swal.fire({

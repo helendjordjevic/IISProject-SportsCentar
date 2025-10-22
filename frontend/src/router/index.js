@@ -6,6 +6,7 @@ import RegisterView from '../views/RegisterView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import AddSessionView from '@/views/AddSessionView.vue';
 import WeeklyReportView from '@/views/WeeklyReportView.vue';
+import SuggestionsView from '@/views/SuggestionsView.vue';
 
 
 import { store } from '@/main'; 
@@ -20,7 +21,7 @@ const routes = [
     path: '/training/:id',  // ruta za detalje jednog treninga
     name: 'trainingDetail',
     component: TrainingDetailView,
-    props: true   // omogućava da parametar id ide u komponentu kao prop
+    props: true   
   },
   {
     path: '/login',
@@ -47,6 +48,11 @@ const routes = [
     name: 'weeklyReport',
     component: WeeklyReportView
   },
+  {
+    path: '/suggestions',
+    name: 'suggestions',
+    component: SuggestionsView
+  },
   
 ];
 
@@ -61,7 +67,7 @@ router.beforeEach((to, from, next) => {
   if ((to.name === 'login' || to.name === 'register') && isLoggedIn) {
     next({ name: 'home' }); // redirect na home ako je već ulogovan
   } else {
-    next(); // nastavi normalno
+    next(); 
   }
 });
 

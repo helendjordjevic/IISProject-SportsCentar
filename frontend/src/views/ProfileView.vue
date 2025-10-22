@@ -1,53 +1,47 @@
 <template>
   <div class="profile-view">
-    <h1>My Profile</h1>
+    <h1></h1>
 
-    <div v-if="!isClient">
-      <p v-if="!userId">You need to log in to see your profile.</p>
-      <p v-else>Only clients have reservations and attendances.</p>
+    
+   <div v-if="!userId">
+      <p>You need to log in to see your profile.</p>
     </div>
 
     <div v-else>
-      <!-- My Reservations -->
+      <!-- User Info (visible to all logged in users) -->
       <section class="profile-section">
+        <h2>My Info</h2>
+        <p><strong>First Name:</strong> {{ userInfo?.first_name || 'N/A' }}</p>
+        <p><strong>Last Name:</strong> {{ userInfo?.last_name || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ userInfo?.email || 'N/A' }}</p>
+      </section>
+
+      <!-- My Reservations (only for clients) -->
+      <section v-if="isClient" class="profile-section">
         <h2>My Reservations</h2>
         <div v-if="reservations.length" class="cards-container">
           <div v-for="res in reservations" :key="res.reservation_id" class="card">
             <p><strong>Training:</strong> {{ res.training_name }}</p>
-            <p>
-              <strong>Session:</strong>
-              {{ res.session_start_time ? new Date(res.session_start_time).toLocaleString() : 'N/A' }}
-              -
-              {{ res.session_end_time ? new Date(res.session_end_time).toLocaleString() : 'N/A' }}
-            </p>
+            <p><strong>Session:</strong> {{ res.session_start_time ? new Date(res.session_start_time).toLocaleString() : 'N/A' }}
+              - {{ res.session_end_time ? new Date(res.session_end_time).toLocaleString() : 'N/A' }}</p>
             <p><strong>Reservation Date:</strong> {{ res.reservation_date }}</p>
             <p><strong>Status:</strong> {{ res.status }}</p>
-            <button v-if="res.status === 'RESERVED'" @click="cancelReservation(res.reservation_id)">
-              Cancel
-            </button>
+            <button v-if="res.status === 'RESERVED'" @click="cancelReservation(res.reservation_id)">Cancel</button>
           </div>
         </div>
         <p v-else>No reservations found.</p>
       </section>
 
-      <!-- My Attendances -->
-      <section class="profile-section">
+      <!-- My Attendances (only for clients) -->
+      <section v-if="isClient" class="profile-section">
         <h2>My Attendances</h2>
         <div v-if="attendances.length" class="cards-container">
           <div v-for="att in attendances" :key="att.attendance_id" class="card">
             <p><strong>Training:</strong> {{ att.training_name }}</p>
-            <p>
-              <strong>Session:</strong>
-              {{ new Date(att.session_start_time).toLocaleString() }} -
-              {{ new Date(att.session_end_time).toLocaleString() }}
-            </p>
+            <p><strong>Session:</strong> {{ new Date(att.session_start_time).toLocaleString() }} - {{ new Date(att.session_end_time).toLocaleString() }}</p>
             <p><strong>Attendance Date:</strong> {{ att.attendance_date }}</p>
             <p><strong>Status:</strong> {{ att.attendance_status }}</p>
-
-            <!-- Prikaži ocenu ako postoji -->
             <p v-if="att.training_rating"><strong>Rating:</strong> {{ att.training_rating }}/10</p>
-
-            <!-- Dugme za ocenjivanje ako još nema ocene -->
             <div v-else class="rate-container">
               <input type="number" v-model.number="att.newRating" min="1" max="10" placeholder="1-10"/>
               <button @click="rateAttendance(att.attendance_id, att.newRating)">Rate</button>
@@ -68,16 +62,26 @@ export default {
     return {
       userId: localStorage.getItem("userId"),
       userType: localStorage.getItem("userType"),
+      userInfo: null,
       reservations: [],
       attendances: []
     };
   },
   computed: {
     isClient() {
-      return this.userId && this.userType === "CLIENT";
+      return this.userType === "CLIENT";
     }
   },
   methods: {
+    async fetchUserInfo() {
+      if (!this.userId) return;
+      try {
+        const res = await axios.get(`http://localhost:8000/users/${this.userId}`);
+        this.userInfo = res.data;
+      } catch (error) {
+        console.error("Error fetching user info:", error.response?.data || error.message);
+      }
+    },
     async fetchReservations() {
       if (!this.isClient) return;
       try {
@@ -119,10 +123,13 @@ export default {
       }
     }
   },
-  created() {
-    if (this.isClient) {
-      this.fetchReservations();
-      this.fetchAttendances();
+   created() {
+    if (this.userId) {
+      this.fetchUserInfo();
+      if (this.isClient) {
+        this.fetchReservations();
+        this.fetchAttendances();
+      }
     }
   }
 };

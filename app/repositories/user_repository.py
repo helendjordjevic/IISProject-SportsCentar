@@ -18,7 +18,7 @@ class UserRepository:
 
 
     def create(self, user: schemas.UserCreate):
-        hashed_password = hash_password(user.password)  # 👈 koristi funkciju iz security.py
+        hashed_password = hash_password(user.password) 
         db_user = models.User(
             first_name=user.first_name,
             last_name=user.last_name,

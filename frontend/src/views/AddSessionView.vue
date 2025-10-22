@@ -79,12 +79,12 @@ export default {
       }
     },
     async createSession() {
-        const trainingId = this.$route.params.trainingId; // ovo je ključ
+        const trainingId = this.$route.params.trainingId; 
         try {
             const payload = {
             start_time: this.form.start_time,
             end_time: this.form.end_time,
-            training_id: parseInt(trainingId), // obavezno int
+            training_id: parseInt(trainingId), 
             training_studio_id: this.form.training_studio_id,
             instructor_id: this.form.instructor_id
             };
