@@ -57,3 +57,11 @@ def delete_training(training_id: int, db: Session = Depends(get_db)):
         return {"detail": "Trening uspešno obrisan"}
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
+@router.get("/instructor/{instructor_id}", response_model=list[TrainingOut])
+def get_trainings_for_instructor(instructor_id: int, db: Session = Depends(get_db)):
+    service = TrainingService(db)
+    try:
+        return service.get_trainings_for_instructor(instructor_id)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))

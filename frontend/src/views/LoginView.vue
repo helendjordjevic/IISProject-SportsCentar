@@ -58,7 +58,11 @@ export default {
           confirmButtonColor: "rgb(0, 175, 240)"
         });
 
-        this.$router.push({ name: "home" });
+        if (user.user_type === "INSTRUCTOR") {
+          this.$router.push({ name: "homeInstructors" });
+        } else {
+          this.$router.push({ name: "home" });
+        }
       } catch (error) {
         await Swal.fire({
           title: "Neuspešan login",

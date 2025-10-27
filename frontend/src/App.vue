@@ -1,9 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg" style="background-color: rgb(0, 175, 240);">
    <div class="container-fluid">
-      <router-link class="brand" to="/">🏋️ Sports Center</router-link>
+    <router-link class="brand" :to="homeRoute">🏋️ Sports Center</router-link>
 
-      <div v-if="!isTrainingDetailsPage" class="search-section">
+      <div v-if="$route.name == 'home'" class="search-section">
+
         <input type="text" placeholder="Search trainings..." v-model="searchText" @keyup.enter="searchTrainings" class="search-input"/>
         <select v-model="searchFilter" class="filter-select">
           <option value="name">Name</option>
@@ -55,6 +56,12 @@ export default {
     },
     isInstructor() {
       return this.userType === "INSTRUCTOR";
+    },
+    homeRoute() {
+      if (this.isInstructor) return '/home-instructors';
+      if (this.isAdmin) return '/';
+      if (this.isClient) return '/';
+      return '/';
     }
 },
   watch: {

@@ -23,7 +23,7 @@
           <tr>
             <th>Traning</th>
             <th>Type</th>
-            <th>Instructor ID</th>
+            <th>Instructor</th>
             <th>Difficulty</th>
           </tr>
         </thead>

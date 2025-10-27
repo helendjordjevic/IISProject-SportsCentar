@@ -21,11 +21,15 @@
           class="reserve-btn">          
           Reserve
         </button>
-      </div>
+        <button
+          v-if="isInstructor && isSessionFinished(session)"
+          @click="goToReservationsToMark(session.session_id)"
+           class="reserve-btn"
+          style="background-color: rgb(240, 150, 0); margin-left: 5px;">
+          Mark Attendances
+        </button>
     </div>
-    <div v-else>
-      <p>Za ovaj trening trenutno nema dostupnih termina.</p>
-    </div>
+  </div>
   </div>
 </template>
 
@@ -37,7 +41,10 @@ export default {
   data() {
     return {
       training: {},
-      sessions: []
+      sessions: [],
+      attendanceList: [],  // lista rezervacija za markiranje
+      showAttendanceModal: false,
+      selectedSessionId: null
     };
   }, 
   computed: {
@@ -67,6 +74,15 @@ export default {
   goToAddSession() {
     const trainingId = this.$route.params.id;
     this.$router.push({ name: "addSession", params: { trainingId } });
+  },
+   goToReservationsToMark(sessionId) {
+    this.$router.push({ name: "reservationsToMark", params: { sessionId } });
+  },
+
+  isSessionFinished(session) {
+    const now = new Date();
+    const sessionEnd = new Date(session.end_time);
+    return now >= sessionEnd;
   },
 
   async reserveSession(sessionId) {

@@ -7,6 +7,8 @@ import ProfileView from '../views/ProfileView.vue';
 import AddSessionView from '@/views/AddSessionView.vue';
 import WeeklyReportView from '@/views/WeeklyReportView.vue';
 import SuggestionsView from '@/views/SuggestionsView.vue';
+import HomePageInstructorsView from '@/views/HomePageInstructorsView.vue';
+import ReservationsToMarkView from '@/views/ReservationsToMarkView.vue';
 
 
 import { store } from '@/main'; 
@@ -53,7 +55,17 @@ const routes = [
     name: 'suggestions',
     component: SuggestionsView
   },
-  
+  {
+    path: '/home-instructors',
+    name: 'homeInstructors',
+    component: HomePageInstructorsView
+  },
+  {
+    path: '/session/:sessionId/reservations-to-mark',
+    name: "reservationsToMark",
+    component: ReservationsToMarkView,
+    props: true 
+  },
 ];
 
 const router = createRouter({

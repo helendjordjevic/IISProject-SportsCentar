@@ -2,6 +2,10 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 from app import models, schemas
 from app.repositories.reservation_repository import ReservationRepository
+from app.models import Reservation, ReservationStatusEnum, Session as SessionModel
+from typing import List
+from app.schemas import ReservationToMark
+
 
 class ReservationService:
     def __init__(self, db: Session):
@@ -93,3 +97,36 @@ class ReservationService:
             }
             for r in reservations
         ]
+
+def get_reservations_to_mark(db, session_id: int) -> List[ReservationToMark]:
+    reservations = (
+        db.query(Reservation)
+        .options(
+            joinedload(Reservation.session).joinedload(SessionModel.training),  # OK, koristi atribut klase
+            joinedload(Reservation.client),
+            joinedload(Reservation.session).joinedload(SessionModel.attendances)
+        )
+        .filter(
+            Reservation.session_id == session_id,
+            Reservation.status == ReservationStatusEnum.RESERVED
+        )
+        .all()
+    )
+
+    result = []
+    for r in reservations:
+        # traži prisustvo ovog klijenta na sesiji
+        attendance = next((a for a in r.session.attendances if a.client_id == r.client_id), None)
+        result.append(ReservationToMark(
+            attendance_id = attendance.attendance_id if attendance else None,
+            client_id = r.client_id,
+            client_name = f"{r.client.first_name} {r.client.last_name}",
+            session_id = r.session_id,
+            session_start_time = r.session.start_time,
+            session_end_time = r.session.end_time,
+            attendance_marked = bool(attendance),
+            attendance_status = attendance.attendance_status if attendance else None,
+            training_name = r.session.training.name if r.session.training else None,
+            training_rating = attendance.training_rating if attendance else None
+        ))
+    return result

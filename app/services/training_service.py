@@ -56,3 +56,28 @@ class TrainingService:
         if not db_training:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trening nije pronađen")
         return self.repo.delete(db_training)
+    
+    def get_trainings_for_instructor(self, instructor_id: int):
+        instructor = self.repo.db.query(models.User).filter(
+            models.User.user_id == instructor_id,
+            models.User.user_type == "INSTRUCTOR"
+        ).first()
+
+        if not instructor:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Instruktor nije pronađen ili korisnik nije INSTRUCTOR"
+            )
+
+        trainings = self.repo.db.query(models.Training).filter(
+            models.Training.instructor_id == instructor_id
+        ).all()
+
+        if not trainings:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Instruktor trenutno nema nijedan trening"
+            )
+
+        return [schemas.TrainingOut.from_orm(t) for t in trainings]
+

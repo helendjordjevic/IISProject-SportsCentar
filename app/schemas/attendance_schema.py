@@ -19,14 +19,14 @@ class AttendanceUpdate(BaseModel):
     attendance_status: Optional[AttendanceStatusEnum] = None
 
 class AttendanceOut(BaseModel):
-    attendance_id: int
+    attendance_id: Optional[int]  
     client_id: int
     session_id: int
     training_name: Optional[str]
     session_start_time: datetime
     session_end_time: datetime
-    attendance_date: date
-    attendance_status: AttendanceStatusEnum
+    attendance_date: Optional[date] = None
+    attendance_status: Optional[AttendanceStatusEnum]
     training_rating: Optional[int]
 
     class Config:

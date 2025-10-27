@@ -5,7 +5,7 @@ from app.repositories.attendance_repository import AttendanceRepository
 from typing import Optional
 from collections import defaultdict
 from datetime import datetime, timedelta
-from sqlalchemy.orm import joinedload
+
 
 class AttendanceService:
     def __init__(self, db: Session):

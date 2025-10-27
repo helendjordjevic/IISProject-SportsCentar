@@ -2,11 +2,13 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.attendance_service import AttendanceService
-from app.schemas import AttendanceCreate, AttendanceUpdate, AttendanceOut
+from app.schemas import AttendanceCreate, AttendanceUpdate, AttendanceOut, ReservationToMark
 from app.schemas import WeeklySessionReportItem
 from app.models import AttendanceStatusEnum
 from typing import Optional, List
 from datetime import datetime
+from pydantic import BaseModel
+
 
 # PDF generation imports
 from fastapi.responses import StreamingResponse

@@ -7,3 +7,4 @@ from .attendance_schema import AttendanceBase, AttendanceCreate, AttendanceOut, 
 from .session_schema import SessionBase, SessionCreate, SessionOut, SessionUpdate
 from .weekly_session_report_item import WeeklySessionReportItem 
 from .recommendation_schema import RecommendationOut
+from .reservation_to_mark_schema import ReservationToMark
