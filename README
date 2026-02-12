@@ -6,8 +6,8 @@ psycopg2-binary → PostgreSQL driver
 passlib[argon2] → hash lozinki
 fastapi i uvicorn → API framework + server
 
-Backend: in IISProject-SportsCentar, trenutno promenjen na 8000
-uvicorn main:app --reload --port 6000
+Backend: in IISProject-SportsCentar
+uvicorn main:app --reload --port 8000
 
 Frontend: in frontend 6001
 cd \Users\Helena\Desktop\FTN\4.Godina\IIS\IISProject-SportsCentar\frontend
