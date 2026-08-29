@@ -1,15 +1,48 @@
-venv\Scripts\activate
-pip freeze > requirements.txt
+# Sports Center Management System
 
-sqlalchemy → ORM za rad sa PostgreSQL
-psycopg2-binary → PostgreSQL driver
-passlib[argon2] → hash lozinki
-fastapi i uvicorn → API framework + server
+A full-stack web application developed as a university project for managing the operations of a sports center.
 
-Backend: in IISProject-SportsCentar
+The system supports three types of users — **administrators, instructors, and clients** — and provides functionality for managing trainings, instructors, studios, schedules, reservations, and attendance.
+
+## Key Features
+
+* User registration, authentication, and role-based access
+* Training and instructor management
+* Studio and training session management
+* Reservation and cancellation of training sessions
+* Attendance tracking and training ratings
+* Schedule management with conflict detection for instructors and studios
+* Weekly reports of completed trainings, including attendance and ratings
+* REST API for communication between the frontend and backend
+
+## Technologies
+
+* **Backend:** Python, FastAPI
+* **Frontend:** Vue.js
+* **Database:** PostgreSQL
+* **ORM:** SQLAlchemy
+* **Authentication:** Argon2 password hashing
+* **API:** REST
+
+## Project Structure
+
+* `backend` – FastAPI application and REST API
+* `frontend` – Vue.js web application
+* `requirements.txt` – Python dependencies
+
+## Running the Project
+
+### Backend
+
+```bash
+cd backend
 uvicorn main:app --reload --port 8000
+```
 
-Frontend: in frontend 6001
-cd \Users\Helena\Desktop\FTN\4.Godina\IIS\IISProject-SportsCentar\frontend
+### Frontend
+
+```bash
+cd frontend
 npm install
 npm run serve
+```
